@@ -8,10 +8,16 @@ An AI-powered tool built with Streamlit that helps optimize resumes for job desc
 - Get AI-optimized resume
 - Download as PDF/DOCX
 
-"Create a .env file and add your GEMINI_API_KEY inside."
+## Setup
+    "Create a .env file and add your GEMINI_API_KEY inside."
+    GEMINI_API_KEY=your_api_key_here
+     
+## Run
+    streamlit run app.py
 
 ## Installation
 ```bash
 git clone https://github.com/your-username/AI-Resume-Optimizer.git
 cd AI-Resume-Optimizer
 pip install -r requirements.txt
+
