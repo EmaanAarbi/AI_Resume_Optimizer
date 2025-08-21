@@ -1,2 +1,15 @@
-# AI_Resume_Optimizer
-AI Resume Optimizer is a Streamlit app that enhances resumes using Google Gemini AI. Upload your resume (PDF/DOCX), add an optional job description, and get an optimized version tailored to the role. Download the improved resume instantly in DOCX or PDF format.
+# AI Resume Optimizer
+
+An AI-powered tool built with Streamlit that helps optimize resumes for job descriptions using Google Gemini AI.
+
+## Features
+- Upload resume (PDF/DOCX)
+- Paste job description
+- Get AI-optimized resume
+- Download as PDF/DOCX
+
+## Installation
+```bash
+git clone https://github.com/your-username/AI-Resume-Optimizer.git
+cd AI-Resume-Optimizer
+pip install -r requirements.txt
