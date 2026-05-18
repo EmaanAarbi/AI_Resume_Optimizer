@@ -13,7 +13,9 @@ reformat resumes, tailored to job descriptions.
 - Inline editor to refine AI output before downloading
 - Download result as **DOCX** or **PDF**
 - Word-count metrics (original vs. optimized)
-- Rewaa-branded, enterprise-grade UI
+
+<img width="1280" height="584" alt="WhatsApp Video 2026-05-18 at 10 57 18 PM" src="https://github.com/user-attachments/assets/7c34d848-3bd0-4feb-ad07-5450abcd9bd2" />
+
 
 ## Setup
 
