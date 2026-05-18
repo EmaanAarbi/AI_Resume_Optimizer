@@ -10,13 +10,13 @@ load_dotenv()
 
 # --- Page config (must be first Streamlit call) ---
 st.set_page_config(
-    page_title="AI Resume Optimizer | Rewaa",
+    page_title="AI Resume Optimizer",
     page_icon="📄",
     layout="centered",
     initial_sidebar_state="collapsed",
 )
 
-# --- Rewaa Design System CSS ---
+# --- app Design System CSS ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
@@ -36,7 +36,7 @@ html, body, [data-testid="stAppViewContainer"] {
 .block-container { padding-top: 0 !important; max-width: 760px !important; }
 
 /* ── Top nav bar ── */
-.rewaa-nav {
+.app-nav {
     background: #0b1f3a;
     padding: 14px 32px;
     display: flex;
@@ -45,7 +45,7 @@ html, body, [data-testid="stAppViewContainer"] {
     margin: -1rem -1rem 0 -1rem;
     width: calc(100% + 2rem);
 }
-.rewaa-nav .logo {
+.app-nav .logo {
     color: #fff;
     font-size: 1.25rem;
     font-weight: 700;
@@ -54,8 +54,8 @@ html, body, [data-testid="stAppViewContainer"] {
     align-items: center;
     gap: 8px;
 }
-.rewaa-nav .logo-dot { color: #00d4aa; }
-.rewaa-nav .badge {
+.app-nav .logo-dot { color: #00d4aa; }
+.app-nav .badge {
     background: rgba(0,212,170,0.15);
     border: 1px solid rgba(0,212,170,0.3);
     color: #00d4aa;
@@ -81,7 +81,7 @@ html, body, [data-testid="stAppViewContainer"] {
     line-height: 1.2;
 }
 .hero p {
-    color: #5a6a7e;
+    color: #334155;
     font-size: 1rem;
     margin: 0;
     font-weight: 400;
@@ -91,7 +91,7 @@ html, body, [data-testid="stAppViewContainer"] {
 /* ── Cards ── */
 .card {
     background: #fff;
-    border: 1px solid #e4e9f0;
+    border: 1px solid #cbd5e1;
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 16px;
@@ -160,15 +160,15 @@ html, body, [data-testid="stAppViewContainer"] {
 
 /* ── Result box ── */
 .result-box {
-    background: #f8fafc;
-    border: 1px solid #e4e9f0;
-    border-left: 4px solid #00a884;
-    border-radius: 8px;
-    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-left: 5px solid #00a884;
+    border-radius: 10px;
+    padding: 22px;
     font-family: 'DM Mono', monospace;
-    font-size: 0.82rem;
-    line-height: 1.7;
-    color: #2d3748;
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: #111827;
     white-space: pre-wrap;
     word-break: break-word;
     max-height: 500px;
@@ -250,7 +250,20 @@ div.stSelectbox > div > div {
     background: #fafbfd !important;
 }
 
-div.stCheckbox > label { font-size: 0.9rem; }
+div.stCheckbox > label {
+    font-size: 0.95rem !important;
+    color: #111827 !important;
+    font-weight: 500 !important;
+}
+
+[data-testid="stCheckbox"] label p {
+    color: #111827 !important;
+    opacity: 1 !important;
+}
+
+div.stCheckbox span {
+    color: #111827 !important;
+}
 
 /* ── Divider ── */
 .section-divider {
@@ -260,13 +273,13 @@ div.stCheckbox > label { font-size: 0.9rem; }
 }
 
 /* ── Footer ── */
-.rewaa-footer {
+.app-footer {
     text-align: center;
     padding: 24px 0 8px;
     color: #9aabb8;
     font-size: 0.78rem;
 }
-.rewaa-footer a { color: #00a884; text-decoration: none; }
+.app-footer a { color: #00a884; text-decoration: none; }
 
 /* ── Metric pills ── */
 .metrics-row {
@@ -277,7 +290,7 @@ div.stCheckbox > label { font-size: 0.9rem; }
 .metric-pill {
     flex: 1;
     background: #fff;
-    border: 1px solid #e4e9f0;
+    border: 1px solid #cbd5e1;
     border-radius: 10px;
     padding: 14px 16px;
     text-align: center;
@@ -301,7 +314,7 @@ div.stCheckbox > label { font-size: 0.9rem; }
 
 /* ── Expander ── */
 [data-testid="stExpander"] {
-    border: 1px solid #e4e9f0 !important;
+    border: 1px solid #cbd5e1 !important;
     border-radius: 10px !important;
 }
 </style>
@@ -382,30 +395,25 @@ def configure_gemini(api_key: str):
     genai.configure(api_key=api_key)
 
 
+# MODELS = [
+#     "gemini-2.0-flash",
+#     "gemini-1.5-flash",
+#     "gemini-1.5-pro",
+#     "gemini-2.5-flash",
+# ]
 MODELS = [
-    "gemini-2.0-flash",
-    "gemini-1.5-flash",
-    "gemini-1.5-pro",
-    "gemini-2.5-flash",
+    "models/gemini-2.5-flash",
 ]
-
 
 def call_gemini(prompt: str, api_key: str) -> str:
     configure_gemini(api_key)
-    last_err = None
-    for model_name in MODELS:
-        try:
-            model = genai.GenerativeModel(model_name)
-            response = model.generate_content(prompt)
-            return response.text
-        except Exception as e:
-            if "429" in str(e) or "quota" in str(e).lower():
-                last_err = e
-                continue
-            raise e
-    raise RuntimeError(
-        f"All Gemini models quota exceeded. Last error: {last_err}"
-    )
+
+    try:
+        model = genai.GenerativeModel("gemini-2.5-flash")
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        raise RuntimeError(f"Gemini API error: {str(e)}")
 
 
 # ── Session state defaults ────────────────────────────────────────────────────
@@ -423,9 +431,9 @@ for key, val in {
 
 # Nav bar
 st.markdown("""
-<div class="rewaa-nav">
+<div class="app-nav">
   <div class="logo">
-    <span>rewaa</span><span class="logo-dot">.</span>
+    <span>app</span><span class="logo-dot">.</span>
   </div>
   <div class="badge">AI Tools</div>
 </div>
@@ -651,10 +659,10 @@ if st.session_state["result_text"]:
         st.rerun()
 
 # ── Footer ────────────────────────────────────────────────────────────────────
-st.markdown("""
-<div class="rewaa-footer">
-  Powered by <strong>Rewaa AI Tools</strong> &nbsp;·&nbsp;
-  <a href="https://www.rewaatech.com" target="_blank">rewaatech.com</a>
-  &nbsp;·&nbsp; © 2025 Rewaa Technology
-</div>
-""", unsafe_allow_html=True)
+# st.markdown("""
+# <div class="app-footer">
+#   Powered by <strong>app AI Tools</strong> &nbsp;·&nbsp;
+#   <a href="https://www.apptech.com" target="_blank">apptech.com</a>
+#   &nbsp;·&nbsp; © 2025 app Technology
+# </div>
+# """, unsafe_allow_html=True)
