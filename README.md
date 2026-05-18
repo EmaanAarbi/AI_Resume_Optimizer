@@ -1,4 +1,4 @@
-# AI Resume Optimizer — Rewaa AI Tools
+# AI Resume Optimizer 
 
 A professional Streamlit application that uses Google Gemini AI to optimize and
 reformat resumes, tailored to job descriptions.
